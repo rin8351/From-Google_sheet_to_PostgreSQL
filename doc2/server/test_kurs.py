@@ -46,7 +46,9 @@ def create_table():
         host=os.environ.get('POSTGRES_HOST', ''),
         )
     cur = conn.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS kurs (№ INTEGER, number INTEGER, price_dol INTEGER, date DATE, price_rub INTEGER)")
+    cur.execute("CREATE TABLE IF NOT EXISTS kurs
+                (№ INTEGER, number INTEGER, price_dol INTEGER,
+                    date DATE, price_rub INTEGER)")
     conn.commit()
     conn.close()
 
@@ -122,7 +124,8 @@ def main():
 
     # заполняем таблицу POstgreSQL данными из списка data
     for row in data[1:]:
-        cursor.execute("""SET datestyle = dmy; INSERT INTO "kurs" (№, "number", "price_dol",  "date", "price_rub")
+        cursor.execute("""SET datestyle = dmy; INSERT INTO "kurs"
+                        (№, "number", "price_dol",  "date", "price_rub")
                         VALUES (%s, %s, %s, %s, %s)""", row)
 
     # сохраняем изменения
@@ -207,7 +210,6 @@ while True:
         if num_of_date != []:
             send_message(
                 'Срок поставки заказа номер ' +
-                num_of_date[0] + ' истекает!'
-                )
+                num_of_date[0] + ' истекает!')
         t3600 = 0
     time.sleep(1)
