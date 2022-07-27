@@ -142,20 +142,6 @@ def main():
     return kurs_d
 
 
-# функция для ежедневного обновления курса валюты на завтрашний день,
-# в 16 часов и запись в текстовый файл k.txt
-def new_kurs_from_site(kurs_d):
-    today = datetime.date.today()
-    tomorrow = today + datetime.timedelta(days=1)
-    d = tomorrow.strftime("%d/%m/%Y")
-    now = datetime.datetime.now()
-    if now.hour == 16:
-        kurs_d[d] = dobavlenie_kursa(get_root(d))
-        with open('k.txt', 'w') as f:
-            for key, value in kurs_d.items():
-                f.write(key + ' ' + value + '\n')
-
-
 # функция для проверки соблюдения срока поставки.
 # каждый день в 8 часов проверяется наличие заказов с датой поставки,
 # соответствующих сегодняшней дате
@@ -200,12 +186,10 @@ while True:
     if t30 > 30:
         kurs_d = main()
         t30 = 0
-    # каждый час происходит проверка времени. Когда наступает 16 часов,
-    # курс валюты за завтрашний день вносится в текстовый файл k.txt
+    # каждый час происходит проверка времени. 
     # в 8 часов проверяется наличие заказов с истекшим сроком поставки,
     # и при наличии отправляется сообщение об этом в бот телеграмм
     if t3600 > 3600:
-        new_kurs_from_site(kurs_d)
         num_of_date = check_date()
         if num_of_date != []:
             send_message(
