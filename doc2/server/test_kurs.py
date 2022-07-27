@@ -113,10 +113,17 @@ def main():
         else:
             d = i[3]
             d = d.replace('.', '/')
-            # если в текстовом файле нет нужного курса,
-            # он берется с сайта ЦБРФ
-            if d not in kurs_d:
+                
+            today = datetime.date.today() # берем дату за сегодня
+            today = today.strftime("%d/%m/%Y") # преобразуем дату в формат день/месяц/год
+            if today not in kurs_d:  # если за сегодня нет курса, заполняем его с сайта ЦБРФ
+                kurs_d[today] = dobavlenie_kursa(get_root(today))
+
+            if d < today and d not in kurs_d: # если за прошедшую дату нет курса, заполняем его с сайта ЦБРФ
                 kurs_d[d] = dobavlenie_kursa(get_root(d))
+            elif d > today and d not in kurs_d: # если за будущю дату нет курса, то берем курс за сегодня
+                d = today
+                
             k = kurs_d[d]
             k = k.replace(',', '.')
             rub = float(k) * int(i[2])
